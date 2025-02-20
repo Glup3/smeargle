@@ -11,7 +11,24 @@ import (
 )
 
 func main() {
-	reader, err := os.Open("pikachu.png")
+	name := "houndoom"
+
+	p1 := loadPokemon(name, false)
+	p2 := loadPokemon(name, true)
+
+	fmt.Println(p1.String())
+	fmt.Println(p2.String())
+}
+
+func loadPokemon(name string, shiny bool) pokemon.Pokemon {
+	var folder string
+	if shiny {
+		folder = "shiny"
+	} else {
+		folder = "regular"
+	}
+
+	reader, err := os.Open(fmt.Sprintf("images/%s/%s.png", folder, name))
 	if err != nil {
 		slog.Error("unable to open image", slog.Any("error", err))
 		os.Exit(1)
@@ -24,7 +41,5 @@ func main() {
 		os.Exit(1)
 	}
 
-	pokemon := pokemon.NewPokemon("pikachu", m)
-
-	fmt.Println(pokemon.String())
+	return pokemon.NewPokemon("pikachu", m)
 }
