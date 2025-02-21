@@ -10,6 +10,7 @@ import (
 var (
 	shiny bool
 	form  string
+	slug  string
 )
 
 var sketchCmd = &cobra.Command{
@@ -21,14 +22,12 @@ var sketchCmd = &cobra.Command{
 			return err
 		}
 
-		name := "pikachu"
-
-		im, err := config.GetImage(name, form, shiny)
+		im, err := config.GetImage(slug, form, shiny)
 		if err != nil {
 			return err
 		}
 
-		p := pokemon.NewPokemon(name, im)
+		p := pokemon.NewPokemon(slug, im)
 		fmt.Println(p.String())
 
 		return nil
@@ -39,4 +38,6 @@ func init() {
 	rootCmd.AddCommand(sketchCmd)
 	sketchCmd.Flags().BoolVarP(&shiny, "shiny", "s", false, "show shiny version")
 	sketchCmd.Flags().StringVarP(&form, "form", "f", "", "show alternate form")
+	sketchCmd.Flags().StringVarP(&slug, "name", "n", "", "pokemon name as slug")
+	sketchCmd.MarkFlagRequired("name")
 }
