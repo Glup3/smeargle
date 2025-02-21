@@ -7,11 +7,11 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/glup3/farbeagle/pokemon"
+	"github.com/glup3/smeargle/pokemon"
 )
 
 func main() {
-	name := "houndoom"
+	name := "rayquaza"
 
 	p1 := loadPokemon(name, false)
 	p2 := loadPokemon(name, true)
