@@ -16,7 +16,7 @@ CLI tool to print Pokémon images in the terminal
 - [ ] generation list flag (for list command)
 - [x] generation list flag (for random command)
 - [ ] given names flag (for random command)
-- [ ] show alternate forms flag (for random command)
+- [x] show alternate forms flag (for random command)
 - [x] shiny rate flag (for random command)
 - [ ] man page
 - [ ] bash/zsh auto completions

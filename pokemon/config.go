@@ -123,7 +123,13 @@ func (c *PokemonConfig) FindImage(slug, form string, shiny bool) (image.Image, e
 	return im, nil
 }
 
-func (c *PokemonConfig) RandomPokemon(shinyOdds float32, generations []int) (Pokemon, error) {
+type RandomPokemonOptions struct {
+	ShinyOdds   float32
+	IgnoreForms bool
+	Generations []int
+}
+
+func (c *PokemonConfig) RandomPokemon(options RandomPokemonOptions) (Pokemon, error) {
 	var slugs []string
 	generationIds := map[int][2]int{
 		1: {1, 151},
@@ -137,7 +143,7 @@ func (c *PokemonConfig) RandomPokemon(shinyOdds float32, generations []int) (Pok
 	}
 
 	for slug, pokemon := range c.pokemons {
-		if len(generations) == 0 {
+		if len(options.Generations) == 0 {
 			slugs = append(slugs, slug)
 			continue
 		}
@@ -147,7 +153,7 @@ func (c *PokemonConfig) RandomPokemon(shinyOdds float32, generations []int) (Pok
 			return Pokemon{}, err
 		}
 
-		for _, genId := range generations {
+		for _, genId := range options.Generations {
 			if idx >= generationIds[genId][0] && idx <= generationIds[genId][1] {
 				slugs = append(slugs, slug)
 				continue
@@ -161,14 +167,17 @@ func (c *PokemonConfig) RandomPokemon(shinyOdds float32, generations []int) (Pok
 
 	x := rand.Intn(len(slugs))
 	slug := slugs[x]
+	form := ""
 
-	forms := c.GetForms(slug)
-	forms = append(forms, "")
-	x = rand.Intn(len(forms))
-	form := forms[x]
+	if !options.IgnoreForms {
+		forms := c.GetForms(slug)
+		forms = append(forms, "")
+		x = rand.Intn(len(forms))
+		form = forms[x]
+	}
 
 	shiny := false
-	if rand.Float32() <= shinyOdds {
+	if rand.Float32() <= options.ShinyOdds {
 		shiny = true
 	}
 
