@@ -6,43 +6,58 @@ import (
 	"sort"
 )
 
-type dataConfig struct {
-	Idx  string     `json:"idx"`
-	Name nameConfig `json:"name"`
-	Slug slugConfig `json:"slug"`
-}
-
-type nameConfig struct {
-	Eng   string `json:"eng"`
-	Chs   string `json:"chs"`
-	Jpn   string `json:"jpn"`
-	JpnRo string `json:"jpn_ro"`
-}
-
-type slugConfig struct {
-	Eng   string `json:"eng"`
-	Jpn   string `json:"jpn"`
-	JpnRo string `json:"jpn_ro"`
-}
-
 //go:embed pokemon.json
-var pokemonConfig []byte
+var pokemonJson []byte
 
-func LoadSlugs() ([]string, error) {
-	var config map[string]dataConfig
-	if err := json.Unmarshal(pokemonConfig, &config); err != nil {
+type pokemonData struct {
+	Idx string `json:"idx"`
+
+	Name struct {
+		Eng   string `json:"eng"`
+		Chs   string `json:"chs"`
+		Jpn   string `json:"jpn"`
+		JpnRo string `json:"jpn_ro"`
+	} `json:"name"`
+
+	Slug struct {
+		Eng   string `json:"eng"`
+		Jpn   string `json:"jpn"`
+		JpnRo string `json:"jpn_ro"`
+	} `json:"slug"`
+}
+
+type slugEng = string
+
+type PokemonConfig struct {
+	pokemons map[slugEng]pokemonData
+}
+
+func NewPokemonConfig() (*PokemonConfig, error) {
+	var config map[string]pokemonData
+	if err := json.Unmarshal(pokemonJson, &config); err != nil {
 		return nil, err
 	}
 
-	slugs := make([]string, len(config))
+	pokemons := make(map[slugEng]pokemonData)
+	for _, p := range config {
+		pokemons[p.Slug.Eng] = p
+	}
+
+	return &PokemonConfig{
+		pokemons: pokemons,
+	}, nil
+}
+
+func (c *PokemonConfig) GetSlugs() []string {
+	slugs := make([]string, len(c.pokemons))
 
 	i := 0
-	for _, item := range config {
-		slugs[i] = item.Slug.Eng
+	for _, p := range c.pokemons {
+		slugs[i] = p.Slug.Eng
 		i++
 	}
 
 	sort.Strings(slugs)
 
-	return slugs, nil
+	return slugs
 }

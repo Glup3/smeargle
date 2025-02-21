@@ -13,12 +13,13 @@ var namesCmd = &cobra.Command{
 	Short: "print all pokemon names separated by line breaks",
 
 	RunE: func(cmd *cobra.Command, args []string) error {
-		slugs, err := pokemon.LoadSlugs()
+		config, err := pokemon.NewPokemonConfig()
 		if err != nil {
 			return err
 		}
 
-		fmt.Println(strings.Join(slugs, "\n"))
+		fmt.Println(strings.Join(config.GetSlugs(), "\n"))
+
 		return nil
 	},
 }
