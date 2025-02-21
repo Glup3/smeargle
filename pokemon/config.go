@@ -12,6 +12,8 @@ import (
 	"github.com/glup3/smeargle/images"
 )
 
+const defaultForm = "$"
+
 //go:embed pokemon.json
 var pokemonJson []byte
 
@@ -32,7 +34,9 @@ type pokemonData struct {
 	} `json:"slug"`
 
 	Gen8 struct {
-		Forms map[string]interface{} `json:"forms"`
+		Forms map[string]struct {
+			IsAliasOf string `json:"is_alias_of"`
+		} `json:"forms"`
 	} `json:"gen-8"`
 }
 
@@ -75,7 +79,7 @@ func (c *PokemonConfig) GetForms(slug slugEng) []string {
 	var forms []string
 
 	for form := range c.pokemons[slug].Gen8.Forms {
-		if form == "$" {
+		if form == defaultForm {
 			continue
 		}
 
@@ -89,7 +93,13 @@ func (c *PokemonConfig) GetForms(slug slugEng) []string {
 func (c *PokemonConfig) GetImage(slug, form string, shiny bool) (image.Image, error) {
 	fileName := slug
 	if form != "" {
-		fileName += fmt.Sprintf("-%s", form)
+		alias := c.pokemons[slug].Gen8.Forms[form].IsAliasOf
+
+		if alias == "" {
+			fileName += fmt.Sprintf("-%s", form)
+		} else if alias != defaultForm {
+			fileName += fmt.Sprintf("-%s", alias)
+		}
 	}
 
 	folder := "regular"
