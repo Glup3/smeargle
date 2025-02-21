@@ -10,6 +10,7 @@ const (
 	upperBlock = '▀'
 	lowerBlock = '▄'
 	emptyBlock = ' '
+	resetCode  = "\033[0m"
 )
 
 type Pokemon struct {
@@ -52,24 +53,25 @@ func (p Pokemon) String(colorOverrides []RGBAOverride) string {
 				}
 			}
 
+			foreground := fmt.Sprintf("\033[38;2;%d;%d;%dm", r, g, b)
+
 			if a == 0 && a2 == 0 {
 				sb.WriteRune(emptyBlock)
 				continue
 			}
 
 			if a == 0 {
-				sb.WriteString(fmt.Sprintf("%s%c", fmt.Sprintf("\033[38;2;%d;%d;%dm", r, g, b), lowerBlock))
+				sb.WriteString(fmt.Sprintf("%s%c%s", foreground, lowerBlock, resetCode))
 				continue
 			}
 
 			if a2 == 0 {
-				sb.WriteString(fmt.Sprintf("%s%c", fmt.Sprintf("\033[38;2;%d;%d;%dm", r, g, b), upperBlock))
+				sb.WriteString(fmt.Sprintf("%s%c%s", foreground, upperBlock, resetCode))
 				continue
 			}
 
-			foreground := fmt.Sprintf("\033[38;2;%d;%d;%dm", r, g, b)
 			background := fmt.Sprintf("\033[48;2;%d;%d;%dm", r2, g2, b2)
-			sb.WriteString(fmt.Sprintf("%s%s%c\033[0m", foreground, background, upperBlock))
+			sb.WriteString(fmt.Sprintf("%s%s%c%s", foreground, background, upperBlock, resetCode))
 		}
 
 		sb.WriteString("\n")
