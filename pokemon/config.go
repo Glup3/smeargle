@@ -98,7 +98,7 @@ func (c *PokemonConfig) GetImage(slug, form string, shiny bool) (image.Image, er
 
 	f, err := images.PokemonImages.Open(fmt.Sprintf("%s/%s.png", folder, fileName))
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%s %s: name and form combination does not exist", slug, form)
 	}
 	defer f.Close()
 
