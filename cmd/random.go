@@ -7,6 +7,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var shinyOdds float32
+
 var randomCmd = &cobra.Command{
 	Use:   "random",
 	Short: "paints a random pokemon",
@@ -16,7 +18,7 @@ var randomCmd = &cobra.Command{
 			return err
 		}
 
-		p, err := config.RandomPokemon()
+		p, err := config.RandomPokemon(shinyOdds)
 		if err != nil {
 			return err
 		}
@@ -29,4 +31,5 @@ var randomCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(randomCmd)
+	sketchCmd.Flags().Float32Var(&shinyOdds, "shiny-odds", 1/128, "shiny probablity between 0.0 and 1.0")
 }

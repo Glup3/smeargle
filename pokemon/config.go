@@ -111,7 +111,7 @@ func (c *PokemonConfig) GetImage(slug, form string, shiny bool) (image.Image, er
 	return im, nil
 }
 
-func (c *PokemonConfig) RandomPokemon() (Pokemon, error) {
+func (c *PokemonConfig) RandomPokemon(shinyOdds float32) (Pokemon, error) {
 	slugs := c.GetSlugs()
 	x := rand.Intn(len(slugs))
 	slug := slugs[x]
@@ -122,7 +122,7 @@ func (c *PokemonConfig) RandomPokemon() (Pokemon, error) {
 	form := forms[x]
 
 	shiny := false
-	if rand.Float32() >= 0.5 {
+	if rand.Float32() <= shinyOdds {
 		shiny = true
 	}
 
