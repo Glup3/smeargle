@@ -9,7 +9,6 @@ CLI tool to print Pokémon images in the terminal
 - [x] print command
 - [x] list command (show all names & forms for single pokemon)
 - [x] random command
-- [ ] interactive mode (using bubbletea)
 - [x] shiny flag
 - [x] name flag
 - [x] form flag
@@ -18,5 +17,7 @@ CLI tool to print Pokémon images in the terminal
 - [ ] given names flag (for random command)
 - [x] shiny rate flag (for random command)
 - [ ] man page
+- [ ] bash/zsh auto completions
 - [ ] override pixel color flag
-- [ ] pixel colors histogram command
+- [x] pixel colors histogram command
+- [ ] interactive mode (using bubbletea)

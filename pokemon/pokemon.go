@@ -34,7 +34,8 @@ func (p Pokemon) String() string {
 			r, g, b, a := p.image.At(x, y).RGBA()
 			r2, g2, b2, a2 := p.image.At(x, y+1).RGBA()
 
-			_, _ = a, a2
+			r, g, b, a = r>>8, g>>8, b>>8, a>>8
+			r2, g2, b2, a2 = r2>>8, g2>>8, b2>>8, a2>>8
 
 			if a == 0 && a2 == 0 {
 				sb.WriteRune(emptyBlock)
@@ -60,6 +61,24 @@ func (p Pokemon) String() string {
 	}
 
 	return sb.String()
+}
+
+func (p Pokemon) ColorHistogram() map[string]int {
+	minX, minY, maxX, maxY := findVisibleBounds(p.image)
+
+	histogram := make(map[string]int)
+
+	for y := minY; y <= maxY; y++ {
+		for x := minX; x <= maxX; x++ {
+			r, g, b, a := p.image.At(x, y).RGBA()
+			r, g, b, a = r>>8, g>>8, b>>8, a>>8
+
+			rgbaKey := fmt.Sprintf("%d %d %d %d", r, g, b, a)
+			histogram[rgbaKey]++
+		}
+	}
+
+	return histogram
 }
 
 func findVisibleBounds(m image.Image) (minX, minY, maxX, maxY int) {
