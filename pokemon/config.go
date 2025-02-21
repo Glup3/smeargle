@@ -90,7 +90,7 @@ func (c *PokemonConfig) GetForms(slug slugEng) []string {
 	return forms
 }
 
-func (c *PokemonConfig) GetImage(slug, form string, shiny bool) (image.Image, error) {
+func (c *PokemonConfig) FindImage(slug, form string, shiny bool) (image.Image, error) {
 	fileName := slug
 	if form != "" {
 		alias := c.pokemons[slug].Gen8.Forms[form].IsAliasOf
@@ -136,7 +136,7 @@ func (c *PokemonConfig) RandomPokemon(shinyOdds float32) (Pokemon, error) {
 		shiny = true
 	}
 
-	im, err := c.GetImage(slug, form, shiny)
+	im, err := c.FindImage(slug, form, shiny)
 	if err != nil {
 		return Pokemon{}, err
 	}

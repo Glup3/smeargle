@@ -13,26 +13,26 @@ const (
 )
 
 type Pokemon struct {
-	Name  string
-	Image image.Image
+	name  string
+	image image.Image
 }
 
 func NewPokemon(name string, image image.Image) Pokemon {
 	return Pokemon{
-		Name:  name,
-		Image: image,
+		name:  name,
+		image: image,
 	}
 }
 
 func (p Pokemon) String() string {
 	var sb strings.Builder
 
-	minX, minY, maxX, maxY := findVisibleBounds(p.Image)
+	minX, minY, maxX, maxY := findVisibleBounds(p.image)
 
 	for y := minY; y <= maxY; y += 2 {
 		for x := minX; x <= maxX; x++ {
-			r, g, b, a := p.Image.At(x, y).RGBA()
-			r2, g2, b2, a2 := p.Image.At(x, y+1).RGBA()
+			r, g, b, a := p.image.At(x, y).RGBA()
+			r2, g2, b2, a2 := p.image.At(x, y+1).RGBA()
 
 			_, _ = a, a2
 

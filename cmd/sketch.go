@@ -22,7 +22,7 @@ var sketchCmd = &cobra.Command{
 			return err
 		}
 
-		im, err := config.GetImage(slug, form, shiny)
+		im, err := config.FindImage(slug, form, shiny)
 		if err != nil {
 			return err
 		}
