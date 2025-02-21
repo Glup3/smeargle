@@ -7,6 +7,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var shiny bool
+
 var sketchCmd = &cobra.Command{
 	Use:   "sketch",
 	Short: "paints the Pokemon",
@@ -19,7 +21,7 @@ var sketchCmd = &cobra.Command{
 		name := "pikachu"
 		form := ""
 
-		im, err := config.GetImage(name, form)
+		im, err := config.GetImage(name, form, shiny)
 		if err != nil {
 			return err
 		}
@@ -33,4 +35,5 @@ var sketchCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(sketchCmd)
+	sketchCmd.Flags().BoolVarP(&shiny, "shiny", "s", false, "show shiny version")
 }

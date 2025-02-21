@@ -85,13 +85,18 @@ func (c *PokemonConfig) GetForms(slug slugEng) []string {
 	return forms
 }
 
-func (c *PokemonConfig) GetImage(slug, form string) (image.Image, error) {
+func (c *PokemonConfig) GetImage(slug, form string, shiny bool) (image.Image, error) {
 	fileName := slug
 	if form != "" {
 		fileName += fmt.Sprintf("-%s", form)
 	}
 
-	f, err := images.PokemonImages.Open(fmt.Sprintf("regular/%s.png", fileName))
+	folder := "regular"
+	if shiny {
+		folder = "shiny"
+	}
+
+	f, err := images.PokemonImages.Open(fmt.Sprintf("%s/%s.png", folder, fileName))
 	if err != nil {
 		return nil, err
 	}
