@@ -12,12 +12,16 @@ CLI tool to print Pokémon images in the terminal
 - [x] shiny flag
 - [x] name flag
 - [x] form flag
+- [ ] display pokemon info flag
 - [ ] generation list flag (for list command)
-- [ ] generation list flag (for random command)
+- [x] generation list flag (for random command)
 - [ ] given names flag (for random command)
+- [ ] show alternate forms flag (for random command)
 - [x] shiny rate flag (for random command)
 - [ ] man page
 - [ ] bash/zsh auto completions
-- [ ] override pixel color flag
+- [x] override pixel color flag
 - [x] pixel colors histogram command
 - [ ] interactive mode (using bubbletea)
+- [ ] proper README
+- [ ] github actions releases + protected main pushes

@@ -3,11 +3,13 @@ package pokemon
 import (
 	_ "embed"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"image"
 	_ "image/png"
 	"math/rand"
 	"sort"
+	"strconv"
 
 	"github.com/glup3/smeargle/images"
 )
@@ -121,8 +123,42 @@ func (c *PokemonConfig) FindImage(slug, form string, shiny bool) (image.Image, e
 	return im, nil
 }
 
-func (c *PokemonConfig) RandomPokemon(shinyOdds float32) (Pokemon, error) {
-	slugs := c.GetSlugs()
+func (c *PokemonConfig) RandomPokemon(shinyOdds float32, generations []int) (Pokemon, error) {
+	var slugs []string
+	generationIds := map[int][2]int{
+		1: {1, 151},
+		2: {152, 251},
+		3: {252, 386},
+		4: {387, 493},
+		5: {494, 649},
+		6: {650, 721},
+		7: {722, 809},
+		8: {810, 905},
+	}
+
+	for slug, pokemon := range c.pokemons {
+		if len(generations) == 0 {
+			slugs = append(slugs, slug)
+			continue
+		}
+
+		idx, err := strconv.Atoi(pokemon.Idx)
+		if err != nil {
+			return Pokemon{}, err
+		}
+
+		for _, genId := range generations {
+			if idx >= generationIds[genId][0] && idx <= generationIds[genId][1] {
+				slugs = append(slugs, slug)
+				continue
+			}
+		}
+	}
+
+	if len(slugs) == 0 {
+		return Pokemon{}, errors.New("given arguments results in empty list to choose from")
+	}
+
 	x := rand.Intn(len(slugs))
 	slug := slugs[x]
 
