@@ -24,6 +24,10 @@ type pokemonData struct {
 		Jpn   string `json:"jpn"`
 		JpnRo string `json:"jpn_ro"`
 	} `json:"slug"`
+
+	Gen8 struct {
+		Forms map[string]interface{} `json:"forms"`
+	} `json:"gen-8"`
 }
 
 type slugEng = string
@@ -56,8 +60,22 @@ func (c *PokemonConfig) GetSlugs() []string {
 		slugs[i] = p.Slug.Eng
 		i++
 	}
-
 	sort.Strings(slugs)
 
 	return slugs
+}
+
+func (c *PokemonConfig) GetForms(slug slugEng) []string {
+	var forms []string
+
+	for form := range c.pokemons[slug].Gen8.Forms {
+		if form == "$" {
+			continue
+		}
+
+		forms = append(forms, form)
+	}
+	sort.Strings(forms)
+
+	return forms
 }
