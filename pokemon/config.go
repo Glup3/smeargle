@@ -3,7 +3,12 @@ package pokemon
 import (
 	_ "embed"
 	"encoding/json"
+	"fmt"
+	"image"
+	_ "image/png"
 	"sort"
+
+	"github.com/glup3/smeargle/images"
 )
 
 //go:embed pokemon.json
@@ -78,4 +83,24 @@ func (c *PokemonConfig) GetForms(slug slugEng) []string {
 	sort.Strings(forms)
 
 	return forms
+}
+
+func (c *PokemonConfig) GetImage(slug, form string) (image.Image, error) {
+	fileName := slug
+	if form != "" {
+		fileName += fmt.Sprintf("-%s", form)
+	}
+
+	f, err := images.PokemonImages.Open(fmt.Sprintf("regular/%s.png", fileName))
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+
+	im, _, err := image.Decode(f)
+	if err != nil {
+		return nil, err
+	}
+
+	return im, nil
 }
