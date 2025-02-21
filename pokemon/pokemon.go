@@ -17,6 +17,11 @@ type Pokemon struct {
 	image image.Image
 }
 
+type RGBAOverride struct {
+	From [4]uint32
+	To   [4]uint32
+}
+
 func NewPokemon(name string, image image.Image) Pokemon {
 	return Pokemon{
 		name:  name,
@@ -24,7 +29,7 @@ func NewPokemon(name string, image image.Image) Pokemon {
 	}
 }
 
-func (p Pokemon) String() string {
+func (p Pokemon) String(colorOverrides []RGBAOverride) string {
 	var sb strings.Builder
 
 	minX, minY, maxX, maxY := findVisibleBounds(p.image)
@@ -36,6 +41,16 @@ func (p Pokemon) String() string {
 
 			r, g, b, a = r>>8, g>>8, b>>8, a>>8
 			r2, g2, b2, a2 = r2>>8, g2>>8, b2>>8, a2>>8
+
+			for _, o := range colorOverrides {
+				if r == o.From[0] && g == o.From[1] && b == o.From[2] && a == o.From[3] {
+					r, g, b, a = o.To[0], o.To[1], o.To[2], o.To[3]
+				}
+
+				if r2 == o.From[0] && g2 == o.From[1] && b2 == o.From[2] && a2 == o.From[3] {
+					r2, g2, b2, a2 = o.To[0], o.To[1], o.To[2], o.To[3]
+				}
+			}
 
 			if a == 0 && a2 == 0 {
 				sb.WriteRune(emptyBlock)
@@ -114,4 +129,13 @@ func findVisibleBounds(m image.Image) (minX, minY, maxX, maxY int) {
 	}
 
 	return minX, minY, maxX, maxY
+}
+
+func ParseRGBAOverride(override string) (RGBAOverride, error) {
+	var from, to [4]uint32
+	_, err := fmt.Sscanf(override, "%d %d %d %d=%d %d %d %d", &from[0], &from[1], &from[2], &from[3], &to[0], &to[1], &to[2], &to[3])
+	if err != nil {
+		return RGBAOverride{}, fmt.Errorf("invalid override format: %v", err)
+	}
+	return RGBAOverride{From: from, To: to}, nil
 }

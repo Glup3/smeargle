@@ -16,6 +16,20 @@ var randomCmd = &cobra.Command{
 			return err
 		}
 
+		rgbaOverrides, err := cmd.Flags().GetStringArray("override-rgba")
+		if err != nil {
+			return err
+		}
+
+		colorOverrides := make([]pokemon.RGBAOverride, len(rgbaOverrides))
+		for _, override := range rgbaOverrides {
+			colorOverride, err := pokemon.ParseRGBAOverride(override)
+			if err != nil {
+				return err
+			}
+			colorOverrides = append(colorOverrides, colorOverride)
+		}
+
 		config, err := pokemon.NewPokemonConfig()
 		if err != nil {
 			return err
@@ -26,7 +40,7 @@ var randomCmd = &cobra.Command{
 			return err
 		}
 
-		fmt.Println(p.String())
+		fmt.Println(p.String(colorOverrides))
 
 		return nil
 	},
@@ -35,4 +49,5 @@ var randomCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(randomCmd)
 	randomCmd.Flags().Float32("shiny-odds", 1/128, "shiny probablity between 0.0 and 1.0")
+	randomCmd.Flags().StringArray("override-rgba", []string{}, "override a given rgba color. example \"120 90 23 255=99 18 44 255\"")
 }
