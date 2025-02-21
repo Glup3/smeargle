@@ -7,16 +7,25 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var (
-	shiny bool
-	form  string
-	slug  string
-)
-
 var sketchCmd = &cobra.Command{
 	Use:   "sketch",
 	Short: "paints the Pokemon",
 	RunE: func(cmd *cobra.Command, args []string) error {
+		slug, err := cmd.Flags().GetString("name")
+		if err != nil {
+			return err
+		}
+
+		shiny, err := cmd.Flags().GetBool("shiny")
+		if err != nil {
+			return err
+		}
+
+		form, err := cmd.Flags().GetString("form")
+		if err != nil {
+			return err
+		}
+
 		config, err := pokemon.NewPokemonConfig()
 		if err != nil {
 			return err
@@ -36,8 +45,8 @@ var sketchCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(sketchCmd)
-	sketchCmd.Flags().BoolVarP(&shiny, "shiny", "s", false, "show shiny version")
-	sketchCmd.Flags().StringVarP(&form, "form", "f", "", "show alternate form")
-	sketchCmd.Flags().StringVarP(&slug, "name", "n", "", "pokemon name as slug")
+	sketchCmd.Flags().StringP("name", "n", "", "pokemon name as slug")
+	sketchCmd.Flags().StringP("form", "f", "", "show alternate form")
+	sketchCmd.Flags().BoolP("shiny", "s", false, "show shiny version")
 	sketchCmd.MarkFlagRequired("name")
 }
