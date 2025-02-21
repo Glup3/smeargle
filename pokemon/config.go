@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"image"
 	_ "image/png"
+	"math/rand"
 	"sort"
 
 	"github.com/glup3/smeargle/images"
@@ -108,4 +109,27 @@ func (c *PokemonConfig) GetImage(slug, form string, shiny bool) (image.Image, er
 	}
 
 	return im, nil
+}
+
+func (c *PokemonConfig) RandomPokemon() (Pokemon, error) {
+	slugs := c.GetSlugs()
+	x := rand.Intn(len(slugs))
+	slug := slugs[x]
+
+	forms := c.GetForms(slug)
+	forms = append(forms, "")
+	x = rand.Intn(len(forms))
+	form := forms[x]
+
+	shiny := false
+	if rand.Float32() >= 0.5 {
+		shiny = true
+	}
+
+	im, err := c.GetImage(slug, form, shiny)
+	if err != nil {
+		return Pokemon{}, err
+	}
+
+	return NewPokemon(slug, im), nil
 }
