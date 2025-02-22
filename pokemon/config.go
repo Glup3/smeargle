@@ -19,6 +19,32 @@ const defaultForm = "$"
 //go:embed pokemon.json
 var pokemonJson []byte
 
+var generationIds = map[int][2]int{
+	1: {1, 151},
+	2: {152, 251},
+	3: {252, 386},
+	4: {387, 493},
+	5: {494, 649},
+	6: {650, 721},
+	7: {722, 809},
+	8: {810, 905},
+}
+
+type (
+	OrderBy       int
+	SortDirection int
+)
+
+const (
+	Alphabet OrderBy = iota
+	Idx
+)
+
+const (
+	Asc SortDirection = iota
+	Desc
+)
+
 type pokemonData struct {
 	Idx string `json:"idx"`
 

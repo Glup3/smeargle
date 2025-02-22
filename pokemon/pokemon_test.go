@@ -34,6 +34,9 @@ func TestGetSlugsCount(t *testing.T) {
 			}
 
 			slugs, err := config.GetSlugs(tt.gens, Idx, Asc)
+			if err != nil {
+				t.Errorf("%+v", err)
+			}
 			if len(slugs) != tt.expectedCount {
 				t.Errorf("got %d, expected %d", len(slugs), tt.expectedCount)
 			}
@@ -68,6 +71,9 @@ func TestGetSlugsSorting(t *testing.T) {
 			}
 
 			slugs, err := config.GetSlugs(tt.gens, tt.orderBy, tt.sortDir)
+			if err != nil {
+				t.Errorf("%+v", err)
+			}
 			if slugs[0] != tt.expectedFirst {
 				t.Errorf("got %s, expected %s", slugs[0], tt.expectedFirst)
 			}

@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/glup3/smeargle/pokemon"
@@ -44,11 +43,6 @@ var randomCmd = &cobra.Command{
 		generations, err := pokemon.ParseGenerationString(generationsString)
 		if err != nil {
 			return err
-		}
-		for _, gen := range generations {
-			if gen <= 0 || gen > 8 {
-				return errors.New("generation has to be between 1 and 8")
-			}
 		}
 
 		config, err := pokemon.NewPokemonConfig()

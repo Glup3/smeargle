@@ -6,17 +6,6 @@ import (
 	"strings"
 )
 
-var generationIds = map[int][2]int{
-	1: {1, 151},
-	2: {152, 251},
-	3: {252, 386},
-	4: {387, 493},
-	5: {494, 649},
-	6: {650, 721},
-	7: {722, 809},
-	8: {810, 905},
-}
-
 func ParseGenerationString(s string) ([]int, error) {
 	if s == "" {
 		return []int{}, nil
@@ -39,9 +28,17 @@ func ParseGenerationString(s string) ([]int, error) {
 				return nil, fmt.Errorf("invalid start number: %s", rangeParts[0])
 			}
 
+			if start <= 0 || start > 8 {
+				return nil, fmt.Errorf("start number has to be between 1 and 8: %d", start)
+			}
+
 			end, err := strconv.Atoi(rangeParts[1])
 			if err != nil {
 				return nil, fmt.Errorf("invalid end number: %s", rangeParts[1])
+			}
+
+			if end <= 0 || end > 8 {
+				return nil, fmt.Errorf("end number has to be between 1 and 8: %d", end)
 			}
 
 			if start > end {
@@ -60,6 +57,11 @@ func ParseGenerationString(s string) ([]int, error) {
 			if err != nil {
 				return nil, fmt.Errorf("invalid number: %s", part)
 			}
+
+			if num <= 0 || num > 8 {
+				return nil, fmt.Errorf("number has to be between 1 and 8: %d", num)
+			}
+
 			if !seen.Has(num) {
 				result = append(result, num)
 				seen.Add(num)
@@ -69,21 +71,6 @@ func ParseGenerationString(s string) ([]int, error) {
 
 	return result, nil
 }
-
-type (
-	OrderBy       int
-	SortDirection int
-)
-
-const (
-	Alphabet OrderBy = iota
-	Idx
-)
-
-const (
-	Asc SortDirection = iota
-	Desc
-)
 
 func ParseOrderByString(s string) (OrderBy, error) {
 	switch strings.ToLower(s) {

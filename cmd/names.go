@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"errors"
 	"fmt"
 	"strings"
 
@@ -42,13 +41,6 @@ var namesCmd = &cobra.Command{
 		gens, err := pokemon.ParseGenerationString(generationsString)
 		if err != nil {
 			return err
-		}
-
-		// TODO: move this into generation parsing
-		for _, gen := range gens {
-			if gen <= 0 || gen > 8 {
-				return errors.New("generation has to be between 1 and 8")
-			}
 		}
 
 		config, err := pokemon.NewPokemonConfig()
