@@ -64,17 +64,31 @@ func NewPokemonConfig() (*PokemonConfig, error) {
 	}, nil
 }
 
-func (c *PokemonConfig) GetSlugs() []string {
-	slugs := make([]string, len(c.pokemons))
+func (c *PokemonConfig) GetSlugs(gens []int) ([]string, error) {
+	var slugs []string
 
-	i := 0
-	for _, p := range c.pokemons {
-		slugs[i] = p.Slug.Eng
-		i++
+	for slug, pokemon := range c.pokemons {
+		if len(gens) == 0 {
+			slugs = append(slugs, slug)
+			continue
+		}
+
+		idx, err := strconv.Atoi(pokemon.Idx)
+		if err != nil {
+			return nil, err
+		}
+
+		for _, genId := range gens {
+			if idx >= generationIds[genId][0] && idx <= generationIds[genId][1] {
+				slugs = append(slugs, slug)
+				continue
+			}
+		}
 	}
+
 	sort.Strings(slugs)
 
-	return slugs
+	return slugs, nil
 }
 
 func (c *PokemonConfig) GetForms(slug slugEng) []string {
@@ -131,16 +145,6 @@ type RandomPokemonOptions struct {
 
 func (c *PokemonConfig) RandomPokemon(options RandomPokemonOptions) (Pokemon, error) {
 	var slugs []string
-	generationIds := map[int][2]int{
-		1: {1, 151},
-		2: {152, 251},
-		3: {252, 386},
-		4: {387, 493},
-		5: {494, 649},
-		6: {650, 721},
-		7: {722, 809},
-		8: {810, 905},
-	}
 
 	for slug, pokemon := range c.pokemons {
 		if len(options.Generations) == 0 {
