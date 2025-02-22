@@ -17,14 +17,14 @@ var generationIds = map[int][2]int{
 	8: {810, 905},
 }
 
-func ParseGenerationString(input string) ([]int, error) {
-	if input == "" {
+func ParseGenerationString(s string) ([]int, error) {
+	if s == "" {
 		return []int{}, nil
 	}
 
 	var result []int
 	seen := NewSet[int]()
-	parts := strings.Split(input, ",")
+	parts := strings.Split(s, ",")
 
 	for _, part := range parts {
 		if strings.Contains(part, "-") {
@@ -68,4 +68,41 @@ func ParseGenerationString(input string) ([]int, error) {
 	}
 
 	return result, nil
+}
+
+type (
+	OrderBy       int
+	SortDirection int
+)
+
+const (
+	Alphabet OrderBy = iota
+	Idx
+)
+
+const (
+	Asc SortDirection = iota
+	Desc
+)
+
+func ParseOrderByString(s string) (OrderBy, error) {
+	switch strings.ToLower(s) {
+	case "alphabet":
+		return Alphabet, nil
+	case "idx":
+		return Idx, nil
+	default:
+		return 0, fmt.Errorf("invalid order by: %s", s)
+	}
+}
+
+func ParseSortDirectionString(s string) (SortDirection, error) {
+	switch strings.ToLower(s) {
+	case "asc":
+		return Asc, nil
+	case "desc":
+		return Desc, nil
+	default:
+		return 0, fmt.Errorf("invalid sort direction: %s", s)
+	}
 }

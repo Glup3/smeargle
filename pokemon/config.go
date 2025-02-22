@@ -64,12 +64,40 @@ func NewPokemonConfig() (*PokemonConfig, error) {
 	}, nil
 }
 
-func (c *PokemonConfig) GetSlugs(gens []int) ([]string, error) {
-	var slugs []string
+func (c *PokemonConfig) GetSlugs(gens []int, orderBy OrderBy, sortDir SortDirection) ([]string, error) {
+	pokemons := make([]pokemonData, 0, len(c.pokemons))
+	for _, pokemon := range c.pokemons {
+		pokemons = append(pokemons, pokemon)
+	}
 
-	for slug, pokemon := range c.pokemons {
+	sort.Slice(pokemons, func(i, j int) bool {
+		if orderBy == Alphabet {
+			if sortDir == Asc {
+				return pokemons[i].Slug.Eng < pokemons[j].Slug.Eng
+			}
+
+			if sortDir == Desc {
+				return pokemons[i].Slug.Eng > pokemons[j].Slug.Eng
+			}
+		}
+
+		if orderBy == Idx {
+			if sortDir == Asc {
+				return pokemons[i].Idx < pokemons[j].Idx
+			}
+
+			if sortDir == Desc {
+				return pokemons[i].Idx > pokemons[j].Idx
+			}
+		}
+
+		return false
+	})
+
+	var slugs []string
+	for _, pokemon := range pokemons {
 		if len(gens) == 0 {
-			slugs = append(slugs, slug)
+			slugs = append(slugs, pokemon.Slug.Eng)
 			continue
 		}
 
@@ -80,13 +108,11 @@ func (c *PokemonConfig) GetSlugs(gens []int) ([]string, error) {
 
 		for _, genId := range gens {
 			if idx >= generationIds[genId][0] && idx <= generationIds[genId][1] {
-				slugs = append(slugs, slug)
+				slugs = append(slugs, pokemon.Slug.Eng)
 				continue
 			}
 		}
 	}
-
-	sort.Strings(slugs)
 
 	return slugs, nil
 }

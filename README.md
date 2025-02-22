@@ -13,7 +13,8 @@ CLI tool to print Pokémon images in the terminal
 - [x] name flag
 - [x] form flag
 - [ ] display pokemon info flag
-- [ ] generation list flag (for list command)
+- [x] order by flag (for names command)
+- [x] generation list flag (for list command)
 - [x] generation list flag (for random command)
 - [ ] given names flag (for random command)
 - [x] show alternate forms flag (for random command)
