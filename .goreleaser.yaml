@@ -1,5 +1,5 @@
 # yaml-language-server: $schema=https://goreleaser.com/static/schema.json
-
+version: 2
 builds:
   - id: "smeargle"
     main: .
@@ -19,7 +19,7 @@ brews:
     homepage: "https://github.com/Glup3/smeargle"
     description: "CLI tool to print Pokémon images in the terminal"
     url_template: "https://github.com/Glup3/smeargle/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
-
+    directory: Formula
     commit_author:
       name: goreleaserbot
       email: goreleaserbot@glup3.dev
