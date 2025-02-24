@@ -12,11 +12,10 @@ CLI tool to print Pokémon images in the terminal
 - [x] shiny flag
 - [x] name flag
 - [x] form flag
-- [ ] display pokemon info flag
 - [x] order by flag (for names command)
 - [x] generation list flag (for list command)
 - [x] generation list flag (for random command)
-- [ ] given names flag (for random command)
+- [x] given names flag (for random command)
 - [x] show alternate forms flag (for random command)
 - [x] shiny rate flag (for random command)
 - [ ] man page

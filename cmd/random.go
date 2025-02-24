@@ -45,6 +45,11 @@ var randomCmd = &cobra.Command{
 			return err
 		}
 
+		names, err := cmd.Flags().GetStringSlice("names")
+		if err != nil {
+			return err
+		}
+
 		config, err := pokemon.NewPokemonConfig()
 		if err != nil {
 			return err
@@ -54,6 +59,7 @@ var randomCmd = &cobra.Command{
 			ShinyOdds:   shinyOdds,
 			IgnoreForms: ignoreForms,
 			Generations: generations,
+			Names:       names,
 		})
 		if err != nil {
 			return err
@@ -71,4 +77,5 @@ func init() {
 	randomCmd.Flags().StringArray("override-rgba", []string{}, "override a given rgba color. example \"120 90 23 255=99 18 44 255\"")
 	randomCmd.Flags().StringP("generations", "g", "", "provide a list of generations separated by comma (1,3,5,6), OR a range (1-4), OR both (1-3,4,6-8)")
 	randomCmd.Flags().Bool("no-forms", false, "ignore alternate forms when true and always paint base form")
+	randomCmd.Flags().StringSlice("names", []string{}, "provide a list of names separaed by comma (ditto,pikachu,chansey) to be randomized from. can be cobined with --generations")
 }

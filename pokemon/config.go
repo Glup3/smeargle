@@ -8,6 +8,7 @@ import (
 	"image"
 	_ "image/png"
 	"math/rand"
+	"slices"
 	"sort"
 	"strconv"
 
@@ -193,26 +194,44 @@ type RandomPokemonOptions struct {
 	ShinyOdds   float32
 	IgnoreForms bool
 	Generations []int
+	Names       []slugEng
 }
 
 func (c *PokemonConfig) RandomPokemon(options RandomPokemonOptions) (Pokemon, error) {
 	var slugs []string
 
-	for slug, pokemon := range c.pokemons {
-		if len(options.Generations) == 0 {
+	for _, name := range options.Names {
+		_, ok := c.pokemons[name]
+		if !ok {
+			return Pokemon{}, fmt.Errorf("unknown pokemon name: %s", name)
+		}
+	}
+
+	if len(options.Names) == 0 && len(options.Generations) == 0 {
+		for slug := range c.pokemons {
 			slugs = append(slugs, slug)
-			continue
 		}
-
-		idx, err := strconv.Atoi(pokemon.Idx)
-		if err != nil {
-			return Pokemon{}, err
+	} else if len(options.Names) > 0 && len(options.Generations) == 0 {
+		for _, name := range options.Names {
+			slugs = append(slugs, name)
 		}
-
-		for _, genId := range options.Generations {
-			if idx >= generationIds[genId][0] && idx <= generationIds[genId][1] {
+	} else {
+		for slug, pokemon := range c.pokemons {
+			if slices.Contains(options.Names, slug) {
 				slugs = append(slugs, slug)
 				continue
+			}
+
+			idx, err := strconv.Atoi(pokemon.Idx)
+			if err != nil {
+				return Pokemon{}, err
+			}
+
+			for _, genId := range options.Generations {
+				if idx >= generationIds[genId][0] && idx <= generationIds[genId][1] {
+					slugs = append(slugs, slug)
+					continue
+				}
 			}
 		}
 	}
