@@ -1,0 +1,35 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+
+builds:
+  - id: "smeargle"
+    main: .
+    binary: smeargle
+    goos:
+      - darwin
+      - linux
+      - windows
+    env:
+      - CGO_ENABLED=0
+    goarch:
+      - amd64
+      - arm64
+
+brews:
+  - name: smeargle
+    homepage: "https://github.com/Glup3/smeargle"
+    description: "CLI tool to print Pokémon images in the terminal"
+    url_template: "https://github.com/Glup3/smeargle/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+
+    commit_author:
+      name: goreleaserbot
+      email: goreleaserbot@glup3.dev
+
+    license: "MIT"
+
+    repository:
+      owner: Glup3
+      name: homebrew-taps
+      token: "{{ .Env.TAP_GITHUB_TOKEN }}"
+
+checksum:
+  algorithm: sha256
